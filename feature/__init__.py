@@ -36,6 +36,7 @@ def differentiate(feature):
 			
 def mix_feature(tup):
     mfcc = MFCC.extract(tup)
+    pdb.set_trace()
     lpc = LPC.extract(tup)
     mfcc1 = differentiate(mfcc)
     mfcc2 = differentiate(mfcc1)

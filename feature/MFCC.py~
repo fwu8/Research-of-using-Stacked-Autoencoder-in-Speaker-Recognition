@@ -113,7 +113,7 @@ class MFCCExtractor(object):
 
 @cached_func
 def get_mfcc_extractor(fs, win_length_ms=32, win_shift_ms=16,
-                       FFT_SIZE=2048, n_filters=50, n_ceps=15,
+                       FFT_SIZE=2048, n_filters=50, n_ceps=13,
                        pre_emphasis_coef=0.95): # n_ceps=13
     ret = MFCCExtractor(fs, win_length_ms, win_shift_ms, FFT_SIZE, n_filters,
                        n_ceps, pre_emphasis_coef)
