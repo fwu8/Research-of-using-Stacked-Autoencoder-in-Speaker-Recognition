@@ -37,10 +37,13 @@ def differentiate(feature):
 def mix_feature(tup):
     mfcc = MFCC.extract(tup)
     lpc = LPC.extract(tup)
-    mfcc1 = differentiate(mfcc)
-    mfcc2 = differentiate(mfcc1)
+    mfcc_1dif_coef = differentiate(mfcc)
+    mfcc_2dif_coef = differentiate(mfcc_1dif_coef)
     if len(mfcc) == 0:
         print >> sys.stderr, "ERROR.. failed to extract mfcc feature:", len(tup[1])
     #pdb.set_trace()
     #return np.concatenate((mfcc, lpc), axis=1) # 28 dimension
-    return np.concatenate((mfcc, mfcc1, mfcc2), axis=1) # 36 dimension
+    # 39 dimension: mfcc 0-12 coef, and 13 first-order differential coefficient
+    # 13 second-order differential coefficient
+    return np.concatenate((mfcc[:,0:13], mfcc_1dif_coef[:,0:13], mfcc_2dif_coef), axis=1) 
+    
