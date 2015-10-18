@@ -58,12 +58,12 @@ def feature_re_extract():
         numpy_rng=rng,
         theano_rng=theano_rng,
         input=x,
-        n_visible=36,
-        n_hidden=50
+        n_visible=39,
+        n_hidden=100
     )
     cost, updates = da.get_cost_updates(
         corruption_level=0.,
-        learning_rate=0.1
+        learning_rate=0.4
     )
     train_da = theano.function(
     		[train_data],
@@ -74,11 +74,11 @@ def feature_re_extract():
         }
     )
     # train autoencoder
-    training_epochs = 30
-    c = []
+    training_epochs = 100
+    c1 = []
     for epoch in xrange(training_epochs):
-    		c.append(train_da(numpy.asarray(train_set)))
-    		print 'Training epoch %d, cost ' % epoch, numpy.mean(c)
+    		c1.append(train_da(numpy.asarray(train_set)))
+    		print 'Training epoch %d, cost ' % epoch, numpy.mean(c1)
     
     for c in test_class:
     		m.features[c] = da.get_hidden_values(m.features[c]).eval()
@@ -117,6 +117,6 @@ def predict(m, fs, signal, da):
         return m.gmmset.predict_one(feat)
 
 if __name__ == '__main__':
-    train()
+    #train()
     feature_re_extract()
     test()
