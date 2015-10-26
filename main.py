@@ -78,7 +78,7 @@ def feature_re_extract():
     c1 = []
     for epoch in xrange(training_epochs):
     		c1.append(train_da(numpy.asarray(train_set)))
-    		print 'Training epoch %d, cost ' % epoch, numpy.mean(c1)
+    		print 'Training epoch %d, cost ' % epoch, c1[len(c1)-1]
     
     for c in test_class:
     		m.features[c] = da.get_hidden_values(m.features[c]).eval()

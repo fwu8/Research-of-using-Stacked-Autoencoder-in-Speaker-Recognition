@@ -29,6 +29,7 @@
    Systems 19, 2007
 
 """
+import pdb
 import os
 import sys
 import timeit
@@ -324,8 +325,8 @@ class SdA(object):
 
 
 def test_SdA(finetune_lr=0.1, pretraining_epochs=15,
-             pretrain_lr=0.001, training_epochs=1000,
-             dataset='mnist.pkl.gz', batch_size=1):
+             pretrain_lr=0.001, training_epochs=50,
+             dataset='mnist.pkl.gz', batch_size=100):
     """
     Demonstrates how to train and test a stochastic denoising autoencoder.
 
