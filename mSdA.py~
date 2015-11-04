@@ -13,10 +13,14 @@ class mSdA(object):
     def __init__(
         self,
         layers = [39, 100, 100, 200],
-        corruption_levels=[0, 0, 0],
         dAs = []
     ):
+    		self.layers = layers
+    		self.dAs = dAs
+    				
+    def train( self, train_set ):
     		for i in xrange(len(self.layers) - 1):
+    				train_data = T.dmatrix('train_data')
     				x = T.dmatrix('x')
     				rng = numpy.random.RandomState(123)
     				theano_rng = RandomStreams(rng.randint(2 ** 10))
@@ -24,20 +28,14 @@ class mSdA(object):
         				numpy_rng=rng,
         				theano_rng=theano_rng,
         				input=x,
-        				n_visible=layers[i],
-        				n_hidden=layers[i+1]
+        				n_visible=self.layers[i],
+        				n_hidden=self.layers[i+1]
     				)
-    				self.dAs.append(da)
-    				
-    def train(train_set):
-    		for i in xrange(len(self.layers) - 1):
-    				da = self.dAs[i]
-    				train_data = T.dmatrix('train_data')
-    				x = T.dmatrix('x')
     				cost, updates = da.get_cost_updates(
         				corruption_level=0.,
         				learning_rate=0.4
     				)
+    				pdb.set_trace()
     				train_da = theano.function(
     						[train_data],
         				cost,
@@ -45,14 +43,15 @@ class mSdA(object):
         				givens={
             				x: train_data
         				}
-        		training_epochs = 20
-    				for epoch in xrange(training_epochs):
+        		)
+    				for epoch in xrange(20):
     						train_cost = train_da(numpy.asarray(train_set))
     						print 'Training 1st ae epoch %d, cost ' % epoch, train_cost
     				train_set = da.get_hidden_values(train_set).eval()
-    )
+    				self.dAs.append(da)
     
-    def get_hidden_values(features):
+    def get_hidden_values(self, features):
     		for i in xrange(len(self.layers) - 1):
     				da = self.dAs[i]
     				features = da.get_hidden_values(features).eval()
+    		return features
