@@ -7,6 +7,8 @@ import theano.tensor as T
 import numpy
 from theano.tensor.shared_randomstreams import RandomStreams
 from autoencoder.dA import dA
+import cPickle
+import pickle
 
 class mSdA(object):
 		#Stacked denoising auto-encoder class (SdA)
@@ -57,3 +59,13 @@ class mSdA(object):
     				da = self.dAs[i]
     				features = da.get_hidden_values(features).eval()
     		return features
+    
+    def dump(self, fname): # save model
+        with open(fname, 'w') as f:
+            pickle.dump(self, f, -1)
+    
+    @staticmethod
+    def load(fname): # get model
+        with open(fname, 'r') as f:
+            R = pickle.load(f)
+            return R

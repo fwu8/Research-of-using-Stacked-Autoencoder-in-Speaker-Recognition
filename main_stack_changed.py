@@ -8,7 +8,6 @@ import scipy.io.wavfile as wavfile
 import theano
 import theano.tensor as T
 import numpy
-import cPickle
 from theano.tensor.shared_randomstreams import RandomStreams
 from autoencoder.dA import dA
 from interface import ModelInterface
@@ -16,7 +15,6 @@ from utils import read_wav
 from filters.silence import remove_silence
 from feature import mix_feature
 from mSdA import mSdA
-import pickle
 
 def train( ):
     m = ModelInterface()
@@ -70,26 +68,18 @@ def feature_re_extract():
     sda = mSdA(
     		layers = [39, 100]
     )
-    sda.train(train_set, 500)
-    # use 500 as the batch size
+    sda.train(train_set, 500) # use 500 as the batch size
     for c in test_class:
-    		'''
-    		for i in xrange(len(m.features[c])):
-    				for j in xrange(len(m.features[c][i])):
-    						m.features[c][i][j] = 2*(m.features[c][i][j]-lower_bound[j])/(up_bound[j]-lower_bound[j])-1
-    		'''
     		m.features[c] = sda.get_hidden_values(m.features[c])
     
     m.train()
     m.dump('model/model_sda.out')
-    with open('model/sda.out', 'w') as f:
-    		pickle.dump(sda, f, -1)
+    sda.dump('model/sda.out')
     return up_bound, lower_bound
 
 def test( up_bound, lower_bound ):
     m = ModelInterface.load('model/model_sda.out')
-    with open('model/sda.out', 'r') as f:
-    		sda = pickle.load(f)
+    sda = mSdA.load('model/sda.out')
     count = 0;
     test_dir = 'data/test/'
     test_class = ['FAML_S', 'FDHH_S', 'FEAB_S', 'FHRO_S', 
