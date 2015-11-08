@@ -51,7 +51,6 @@ def feature_re_extract():
     for c in test_class:
     		for i in m.features[c]:
     				train_set.append(i)
-    '''
     # put all values into -1~1
     up_bound = []
     lower_bound = []
@@ -67,19 +66,18 @@ def feature_re_extract():
     for i in xrange(len(train_set)):
     		for j in xrange(len(train_set[0])):
     				train_set[i][j] = 2*((train_set[i][j]-lower_bound[j]) / (up_bound[j]-lower_bound[j]))-1
-    '''
     # construct stacked autoencoder
     sda = mSdA(
     		layers = [39, 100]
     )
-    sda.train(train_set)
-    
+    sda.train(train_set, 500)
+    # use 500 as the batch size
     for c in test_class:
-    		'''
+    		
     		for i in xrange(len(m.features[c])):
     				for j in xrange(len(m.features[c][i])):
     						m.features[c][i][j] = 2*(m.features[c][i][j]-lower_bound[j])/(up_bound[j]-lower_bound[j])-1
-    		'''
+    		
     		m.features[c] = sda.get_hidden_values(m.features[c])
     
     m.train()
