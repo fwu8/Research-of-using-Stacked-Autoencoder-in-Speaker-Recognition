@@ -18,7 +18,7 @@ class mSdA(object):
     		self.layers = layers
     		self.dAs = dAs
     				
-    def train( self, train_set ):
+    def train( self, train_set, batch_size = 100 ):
     		for i in xrange(len(self.layers) - 1):
     				train_data = T.dmatrix('train_data')
     				x = T.dmatrix('x')
@@ -35,7 +35,6 @@ class mSdA(object):
         				corruption_level=0.,
         				learning_rate=0.4
     				)
-    				pdb.set_trace()
     				train_da = theano.function(
     						[train_data],
         				cost,
@@ -44,9 +43,12 @@ class mSdA(object):
             				x: train_data
         				}
         		)
+        		
     				for epoch in xrange(20):
-    						train_cost = train_da(numpy.asarray(train_set))
-    						print 'Training 1st ae epoch %d, cost ' % epoch, train_cost
+    						train_cost = []
+    						for index in xrange(len(train_set)/batch_size):
+    								train_cost.append(train_da(numpy.asarray(train_set[index * batch_size: (index + 1) * batch_size])))
+    						print 'Training 1st ae epoch %d, cost ' % epoch, numpy.mean(train_cost)
     				train_set = da.get_hidden_values(train_set).eval()
     				self.dAs.append(da)
     
