@@ -12,6 +12,7 @@ import pickle
 
 class mSdA(object):
 		#Stacked denoising auto-encoder class (SdA)
+		
     def __init__(
         self,
         layers = [39, 100, 100, 200],
@@ -19,6 +20,10 @@ class mSdA(object):
     ):
     		self.layers = layers
     		self.dAs = dAs
+    
+    def setMinMax( up_bound, lower_bound ):
+    		self.up_bound = up_bound
+    		self.lower_bound = lower_bound
     				
     def train( self, train_set, batch_size = 100 ):
     		for i in xrange(len(self.layers) - 1):
